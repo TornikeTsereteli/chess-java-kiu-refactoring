@@ -1,4 +1,4 @@
-
+package chess.model;
 
 import java.awt.Color;
 import java.awt.Graphics;

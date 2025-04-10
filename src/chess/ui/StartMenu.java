@@ -1,3 +1,4 @@
+package chess.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -27,7 +28,7 @@ public class StartMenu implements Runnable {
         Box components = Box.createVerticalBox();
         startWindow.add(components);
         
-        // Game title
+        // chess.app.Game title
         final JPanel titlePanel = new JPanel();
         components.add(titlePanel);
         final JLabel titleLabel = new JLabel("Chess");
@@ -38,11 +39,11 @@ public class StartMenu implements Runnable {
         components.add(blackPanel, BorderLayout.EAST);
         final JLabel blackPiece = new JLabel();
         try {
-            Image blackImg = ImageIO.read(getClass().getResource("bp.png"));
+            Image blackImg = ImageIO.read(getClass().getResource("/bp.png"));
             blackPiece.setIcon(new ImageIcon(blackImg));
             blackPanel.add(blackPiece);
         } catch (Exception e) {
-            System.out.println("Required game file bp.png missing");
+            System.out.println("Required game file bp.png missing1");
         }
         
         
@@ -56,7 +57,7 @@ public class StartMenu implements Runnable {
         final JLabel whitePiece = new JLabel();
         
         try {
-            Image whiteImg = ImageIO.read(getClass().getResource("wp.png"));
+            Image whiteImg = ImageIO.read(getClass().getResource("/wp.png"));
             whitePiece.setIcon(new ImageIcon(whiteImg));
             whitePanel.add(whitePiece);
             startWindow.setIconImage(whiteImg);

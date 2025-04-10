@@ -1,3 +1,4 @@
+package chess.util;
 
 public class Clock {
     private int hh;
