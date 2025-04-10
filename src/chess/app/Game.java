@@ -1,3 +1,6 @@
+package chess.app;
+
+import chess.ui.StartMenu;
 
 import javax.swing.*;
 
