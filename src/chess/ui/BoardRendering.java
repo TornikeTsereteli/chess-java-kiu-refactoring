@@ -1,5 +1,6 @@
 package chess.ui;
 
+import chess.controller.GameController;
 import chess.model.*;
 import chess.model.enums.PieceColor;
 
@@ -10,12 +11,13 @@ import java.util.List;
 
 public class BoardRendering extends JPanel implements MouseListener, MouseMotionListener {
     private final Board board;
-    private final GameWindow gameWindow;
     private int currX, currY;
+
+    private final GameController gameController;
 
     public BoardRendering(Board board, GameWindow gameWindow) {
         this.board = board;
-        this.gameWindow = gameWindow;
+        this.gameController = new GameController(board, gameWindow);
 
         setLayout(new GridLayout(8, 8, 0, 0));
         setPreferredSize(new Dimension(400, 400));
@@ -66,15 +68,7 @@ public class BoardRendering extends JPanel implements MouseListener, MouseMotion
         SquareRendering squareRendering = (SquareRendering) getComponentAt(new Point(currX, currY));
         Square square = squareRendering.getSquare();
 
-        if (square.isOccupied()) {
-            Piece piece = square.getOccupyingPiece();
-            if ((piece.getColor() == PieceColor.BLACK && board.isWhiteTurn()) ||
-                    (piece.getColor() == PieceColor.WHITE && !board.isWhiteTurn())) {
-                return;
-            }
-            board.setCurrPiece(piece);
-            square.setDisplay(false);
-        }
+        gameController.handleMousePressed(square);
 
         repaint();
     }
@@ -84,40 +78,13 @@ public class BoardRendering extends JPanel implements MouseListener, MouseMotion
         SquareRendering squareRendering = (SquareRendering) getComponentAt(new Point(e.getX(), e.getY()));
         Square targetSquare = squareRendering.getSquare();
 
-        Piece currPiece = board.getCurrPiece();
-
-        if (currPiece != null) {
-            List<Square> legalMoves = currPiece.getLegalMoves(board);
-            List<Square> allowed = board.getCheckmateDetector().getAllowableSquares(board.isWhiteTurn());
-
-            if (legalMoves.contains(targetSquare) && allowed.contains(targetSquare)
-                    && board.getCheckmateDetector().testMove(currPiece, targetSquare)) {
-
-                currPiece.move(targetSquare);
-                board.getCheckmateDetector().update();
-
-                if (board.getCheckmateDetector().blackCheckMated()) {
-                    removeMouseListener(this);
-                    removeMouseMotionListener(this);
-                    gameWindow.checkmateOccurred(0);
-                } else if (board.getCheckmateDetector().whiteCheckMated()) {
-                    removeMouseListener(this);
-                    removeMouseMotionListener(this);
-                    gameWindow.checkmateOccurred(1);
-                } else {
-                    board.toggleTurn();
-                }
-            } else {
-                currPiece.getPosition().setDisplay(true);
-            }
-
-            board.setCurrPiece(null);
-        }
+        gameController.handleMouseReleased(targetSquare);
 
         repaint();
     }
 
-    @Override public void mouseDragged(MouseEvent e) {
+    @Override
+    public void mouseDragged(MouseEvent e) {
         currX = e.getX() - 24;
         currY = e.getY() - 24;
         repaint();
