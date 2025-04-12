@@ -1,6 +1,8 @@
 package chess.model;
 
+import chess.model.enums.PieceColor;
 import chess.ui.GameWindow;
+import chess.ui.SquareRendering;
 
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -58,20 +60,7 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         this.addMouseListener(this);
         this.addMouseMotionListener(this);
 
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
-                int xMod = x % 2;
-                int yMod = y % 2;
-
-                if ((xMod == 0 && yMod == 0) || (xMod == 1 && yMod == 1)) {
-                    board[x][y] = new Square(this, 1, y, x);
-                    this.add(board[x][y]);
-                } else {
-                    board[x][y] = new Square(this, 0, y, x);
-                    this.add(board[x][y]);
-                }
-            }
-        }
+        initializeBoardSquares();
 
         initializePieces();
 
@@ -84,35 +73,54 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
 
     }
 
+    private void initializeBoardSquares(){
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                int xMod = x % 2;
+                int yMod = y % 2;
+
+                if ((xMod == 0 && yMod == 0) || (xMod == 1 && yMod == 1)) {
+                    board[x][y] = new Square(this, PieceColor.WHITE, y, x);
+//                    this.add(board[x][y]);
+                    this.add(new SquareRendering(board[x][y]));
+                } else {
+                    board[x][y] = new Square(this, PieceColor.BLACK, y, x);
+//                    this.add(board[x][y]);
+                    this.add(new SquareRendering(board[x][y]));
+                }
+            }
+        }
+    }
+
     private void initializePieces() {
     	
         for (int x = 0; x < 8; x++) {
-            board[1][x].put(new Pawn(0, board[1][x], RESOURCES_BPAWN_PNG));
-            board[6][x].put(new Pawn(1, board[6][x], RESOURCES_WPAWN_PNG));
+            board[1][x].put(new Pawn(PieceColor.BLACK, board[1][x], RESOURCES_BPAWN_PNG));
+            board[6][x].put(new Pawn(PieceColor.WHITE, board[6][x], RESOURCES_WPAWN_PNG));
         }
         
-        board[7][3].put(new Queen(1, board[7][3], RESOURCES_WQUEEN_PNG));
-        board[0][3].put(new Queen(0, board[0][3], RESOURCES_BQUEEN_PNG));
+        board[7][3].put(new Queen(PieceColor.WHITE, board[7][3], RESOURCES_WQUEEN_PNG));
+        board[0][3].put(new Queen(PieceColor.BLACK, board[0][3], RESOURCES_BQUEEN_PNG));
         
-        King bk = new King(0, board[0][4], RESOURCES_BKING_PNG);
-        King wk = new King(1, board[7][4], RESOURCES_WKING_PNG);
+        King bk = new King(PieceColor.BLACK, board[0][4], RESOURCES_BKING_PNG);
+        King wk = new King(PieceColor.WHITE, board[7][4], RESOURCES_WKING_PNG);
         board[0][4].put(bk);
         board[7][4].put(wk);
 
-        board[0][0].put(new Rook(0, board[0][0], RESOURCES_BROOK_PNG));
-        board[0][7].put(new Rook(0, board[0][7], RESOURCES_BROOK_PNG));
-        board[7][0].put(new Rook(1, board[7][0], RESOURCES_WROOK_PNG));
-        board[7][7].put(new Rook(1, board[7][7], RESOURCES_WROOK_PNG));
+        board[0][0].put(new Rook(PieceColor.BLACK, board[0][0], RESOURCES_BROOK_PNG));
+        board[0][7].put(new Rook(PieceColor.BLACK, board[0][7], RESOURCES_BROOK_PNG));
+        board[7][0].put(new Rook(PieceColor.WHITE, board[7][0], RESOURCES_WROOK_PNG));
+        board[7][7].put(new Rook(PieceColor.WHITE, board[7][7], RESOURCES_WROOK_PNG));
 
-        board[0][1].put(new Knight(0, board[0][1], RESOURCES_BKNIGHT_PNG));
-        board[0][6].put(new Knight(0, board[0][6], RESOURCES_BKNIGHT_PNG));
-        board[7][1].put(new Knight(1, board[7][1], RESOURCES_WKNIGHT_PNG));
-        board[7][6].put(new Knight(1, board[7][6], RESOURCES_WKNIGHT_PNG));
+        board[0][1].put(new Knight(PieceColor.BLACK, board[0][1], RESOURCES_BKNIGHT_PNG));
+        board[0][6].put(new Knight(PieceColor.BLACK, board[0][6], RESOURCES_BKNIGHT_PNG));
+        board[7][1].put(new Knight(PieceColor.WHITE, board[7][1], RESOURCES_WKNIGHT_PNG));
+        board[7][6].put(new Knight(PieceColor.WHITE, board[7][6], RESOURCES_WKNIGHT_PNG));
 
-        board[0][2].put(new Bishop(0, board[0][2], RESOURCES_BBISHOP_PNG));
-        board[0][5].put(new Bishop(0, board[0][5], RESOURCES_BBISHOP_PNG));
-        board[7][2].put(new Bishop(1, board[7][2], RESOURCES_WBISHOP_PNG));
-        board[7][5].put(new Bishop(1, board[7][5], RESOURCES_WBISHOP_PNG));
+        board[0][2].put(new Bishop(PieceColor.BLACK, board[0][2], RESOURCES_BBISHOP_PNG));
+        board[0][5].put(new Bishop(PieceColor.BLACK, board[0][5], RESOURCES_BBISHOP_PNG));
+        board[7][2].put(new Bishop(PieceColor.WHITE, board[7][2], RESOURCES_WBISHOP_PNG));
+        board[7][5].put(new Bishop(PieceColor.WHITE, board[7][5], RESOURCES_WBISHOP_PNG));
         
         
         for(int y = 0; y < 2; y++) {
@@ -143,20 +151,25 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
 
     @Override
     public void paintComponent(Graphics g) {
-        // super.paintComponent(g);
+        super.paintComponent(g);
 
+        // Draw the board squares and their pieces
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
                 Square sq = board[y][x];
-                sq.paintComponent(g);
+                SquareRendering squareRendering = new SquareRendering(sq);
+                squareRendering.paintComponent(g);
             }
         }
 
         if (currPiece != null) {
-            if ((currPiece.getColor() == 1 && whiteTurn)
-                    || (currPiece.getColor() == 0 && !whiteTurn)) {
-                final Image i = currPiece.getImage();
-                g.drawImage(i, currX, currY, null);
+            if ((currPiece.getColor() == PieceColor.WHITE && whiteTurn)
+                    || (currPiece.getColor() == PieceColor.BLACK && !whiteTurn)) {
+                final Image pieceImage = currPiece.getImage();
+                if (pieceImage != null) {
+                    g.drawImage(pieceImage, currX, currY,null);
+                    repaint();
+                }
             }
         }
     }
@@ -166,13 +179,14 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
         currX = e.getX();
         currY = e.getY();
 
-        Square sq = (Square) this.getComponentAt(new Point(e.getX(), e.getY()));
-
+//        Square sq = (Square) this.getComponentAt(new Point(e.getX(), e.getY()));
+        SquareRendering squareRendering = (SquareRendering) this.getComponentAt(new Point(e.getX(), e.getY()));
+        Square sq = squareRendering.getSquare();
         if (sq.isOccupied()) {
             currPiece = sq.getOccupyingPiece();
-            if (currPiece.getColor() == 0 && whiteTurn)
+            if (currPiece.getColor() == PieceColor.BLACK && whiteTurn)
                 return;
-            if (currPiece.getColor() == 1 && !whiteTurn)
+            if (currPiece.getColor() == PieceColor.WHITE && !whiteTurn)
                 return;
             sq.setDisplay(false);
         }
@@ -181,12 +195,13 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        Square sq = (Square) this.getComponentAt(new Point(e.getX(), e.getY()));
-
+//        Square sq = (Square) this.getComponentAt(new Point(e.getX(), e.getY()));
+        SquareRendering squareRendering = (SquareRendering) this.getComponentAt(new Point(e.getX(), e.getY()));
+        Square sq = squareRendering.getSquare();
         if (currPiece != null) {
-            if (currPiece.getColor() == 0 && whiteTurn)
+            if (currPiece.getColor() == PieceColor.BLACK && whiteTurn)
                 return;
-            if (currPiece.getColor() == 1 && !whiteTurn)
+            if (currPiece.getColor() == PieceColor.WHITE && !whiteTurn)
                 return;
 
             List<Square> legalMoves = currPiece.getLegalMoves(this);

@@ -1,12 +1,14 @@
 package chess.model;
 
+import chess.model.enums.PieceColor;
+
 import java.util.List;
 import java.util.LinkedList;
 
 public class Pawn extends Piece {
     private boolean wasMoved;
     
-    public Pawn(int color, Square initSq, String img_file) {
+    public Pawn(PieceColor color, Square initSq, String img_file) {
         super(color, initSq, img_file);
     }
     
@@ -25,9 +27,9 @@ public class Pawn extends Piece {
         
         int x = this.getPosition().getXNum();
         int y = this.getPosition().getYNum();
-        int c = this.getColor();
+        PieceColor c = this.getColor();
         
-        if (c == 0) {
+        if (c == PieceColor.BLACK) {
             if (!wasMoved) {
                 if (!board[y+2][x].isOccupied()) {
                     legalMoves.add(board[y+2][x]);
@@ -53,7 +55,7 @@ public class Pawn extends Piece {
             }
         }
         
-        if (c == 1) {
+        if (c == PieceColor.WHITE) {
             if (!wasMoved) {
                 if (!board[y-2][x].isOccupied()) {
                     legalMoves.add(board[y-2][x]);

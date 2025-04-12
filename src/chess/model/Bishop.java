@@ -1,10 +1,12 @@
 package chess.model;
 
+import chess.model.enums.PieceColor;
+
 import java.util.List;
 
 public class Bishop extends Piece {
 
-    public Bishop(int color, Square initSq, String img_file) {
+    public Bishop(PieceColor color, Square initSq, String img_file) {
         super(color, initSq, img_file);
     }
     

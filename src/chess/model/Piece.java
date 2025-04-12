@@ -1,7 +1,8 @@
 package chess.model;
 
-import java.awt.Graphics;
-import java.awt.Image;
+import chess.model.enums.PieceColor;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -10,11 +11,11 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 public abstract class Piece {
-    private final int color;
+    private final PieceColor color;
     private Square currentSquare;
     private BufferedImage img;
     
-    public Piece(int color, Square initSq, String img_file) {
+    public Piece(PieceColor color, Square initSq, String img_file) {
         this.color = color;
         this.currentSquare = initSq;
         
@@ -49,7 +50,7 @@ public abstract class Piece {
         this.currentSquare = sq;
     }
     
-    public int getColor() {
+    public PieceColor getColor() {
         return color;
     }
     
@@ -57,12 +58,12 @@ public abstract class Piece {
         return img;
     }
     
-    public void draw(Graphics g) {
-        int x = currentSquare.getX();
-        int y = currentSquare.getY();
-        
-        g.drawImage(this.img, x, y, null);
-    }
+//    public void draw(Graphics g) {
+//        int x = currentSquare.getX();
+//        int y = currentSquare.getY();
+//
+//        g.drawImage(this.img, x, y, null);
+//    }
     
     public int[] getLinearOccupations(Square[][] board, int x, int y) {
         int lastYabove = 0;
