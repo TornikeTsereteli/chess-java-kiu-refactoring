@@ -70,8 +70,8 @@ public class Square{
     
     public void capture(Piece p) {
         Piece k = getOccupyingPiece();
-        if (k.getColor() == PieceColor.BLACK) b.Bpieces.remove(k);
-        if (k.getColor() == PieceColor.WHITE) b.Wpieces.remove(k);
+        if (k.getColor() == PieceColor.BLACK) b.getBlackPieces().remove(k);
+        if (k.getColor() == PieceColor.WHITE) b.getWhitePieces().remove(k);
         this.occupyingPiece = p;
     }
 

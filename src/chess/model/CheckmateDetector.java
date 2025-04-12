@@ -84,12 +84,12 @@ public class CheckmateDetector {
         }
         
         movableSquares.removeAll(movableSquares);
-        
+
+
         // Add each move white and black can make to map
         while (wIter.hasNext()) {
             Piece p = wIter.next();
-
-            if (!p.getClass().equals(King.class)) {
+            if (! p.getClass().equals(King.class)) {
                 if (p.getPosition() == null) {
                     wIter.remove();
                     continue;
