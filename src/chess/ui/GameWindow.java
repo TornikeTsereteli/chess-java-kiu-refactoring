@@ -51,9 +51,13 @@ public class GameWindow {
         gameData.setSize(gameData.getPreferredSize());
         gameWindow.add(gameData, BorderLayout.NORTH);
         
-        this.board = new Board(this);
-        
-        gameWindow.add(board, BorderLayout.CENTER);
+//        this.board = new Board(this);
+
+        this.board = new Board();
+
+
+        BoardRendering boardRendering = new BoardRendering(board,this);
+        gameWindow.add(boardRendering, BorderLayout.CENTER);
         
         gameWindow.add(buttons(), BorderLayout.SOUTH);
         

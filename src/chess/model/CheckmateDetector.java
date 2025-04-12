@@ -1,5 +1,7 @@
 package chess.model;
 
+import chess.model.enums.PieceColor;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -82,12 +84,12 @@ public class CheckmateDetector {
         }
         
         movableSquares.removeAll(movableSquares);
-        
+
+
         // Add each move white and black can make to map
         while (wIter.hasNext()) {
             Piece p = wIter.next();
-
-            if (!p.getClass().equals(King.class)) {
+            if (! p.getClass().equals(King.class)) {
                 if (p.getPosition() == null) {
                     wIter.remove();
                     continue;
@@ -441,8 +443,8 @@ public class CheckmateDetector {
         p.move(sq);
         update();
         
-        if (p.getColor() == 0 && blackInCheck()) movetest = false;
-        else if (p.getColor() == 1 && whiteInCheck()) movetest = false;
+        if (p.getColor() == PieceColor.BLACK && blackInCheck()) movetest = false;
+        else if (p.getColor() == PieceColor.WHITE && whiteInCheck()) movetest = false;
         
         p.move(init);
         if (c != null) sq.put(c);
