@@ -1,6 +1,5 @@
 package chess.controller;
 
-import chess.app.Game;
 import chess.model.Board;
 import chess.model.Piece;
 import chess.model.Square;

@@ -3,7 +3,6 @@ package chess.model;
 import chess.model.enums.PieceColor;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public class Board {
     private final Square[][] board;

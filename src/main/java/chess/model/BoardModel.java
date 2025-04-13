@@ -1,4 +1,4 @@
-//package chess.model;
+package chess.model;//package chess.model;
 //
 //import chess.model.enums.PieceColor;
 //import chess.ui.GameWindow;

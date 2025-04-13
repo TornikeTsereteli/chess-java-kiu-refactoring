@@ -3,14 +3,16 @@ package chess.ui;
 import chess.controller.GameController;
 import chess.model.*;
 import chess.model.enums.PieceColor;
+import chess.ui.handler.BoardMouseHandler;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
 
-public class BoardRendering extends JPanel implements MouseListener, MouseMotionListener {
+public class BoardRendering extends JPanel{
     private final Board board;
+    @Setter
     private int currX, currY;
 
     private final GameController gameController;
@@ -21,8 +23,9 @@ public class BoardRendering extends JPanel implements MouseListener, MouseMotion
 
         setLayout(new GridLayout(8, 8, 0, 0));
         setPreferredSize(new Dimension(400, 400));
-        addMouseListener(this);
-        addMouseMotionListener(this);
+        MouseAdapter mouseAdapter = new BoardMouseHandler(gameController,this);
+        addMouseListener(mouseAdapter);
+        addMouseMotionListener(mouseAdapter);
 
         drawInitialSquares();
     }
@@ -43,7 +46,7 @@ public class BoardRendering extends JPanel implements MouseListener, MouseMotion
 
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
-                new SquareRendering(squares[y][x]).paintComponent(g);
+                squares[y][x].setDisplay(true);
             }
         }
 
@@ -60,38 +63,5 @@ public class BoardRendering extends JPanel implements MouseListener, MouseMotion
         }
     }
 
-    @Override
-    public void mousePressed(MouseEvent e) {
-        currX = e.getX();
-        currY = e.getY();
 
-        SquareRendering squareRendering = (SquareRendering) getComponentAt(new Point(currX, currY));
-        Square square = squareRendering.getSquare();
-
-        gameController.handleMousePressed(square);
-
-        repaint();
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        SquareRendering squareRendering = (SquareRendering) getComponentAt(new Point(e.getX(), e.getY()));
-        Square targetSquare = squareRendering.getSquare();
-
-        gameController.handleMouseReleased(targetSquare);
-
-        repaint();
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        currX = e.getX() - 24;
-        currY = e.getY() - 24;
-        repaint();
-    }
-
-    @Override public void mouseClicked(MouseEvent e) {}
-    @Override public void mouseEntered(MouseEvent e) {}
-    @Override public void mouseExited(MouseEvent e) {}
-    @Override public void mouseMoved(MouseEvent e) {}
 }

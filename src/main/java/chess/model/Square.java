@@ -1,15 +1,8 @@
 package chess.model;
 
 import chess.model.enums.PieceColor;
-import chess.ui.PieceRendering;
-import chess.ui.SquareRendering;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
-import javax.swing.*;
-
-@SuppressWarnings("serial")
+//@SuppressWarnings("serial")
 public class Square{
     private Board b;
     
