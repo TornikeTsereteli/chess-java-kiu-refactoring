@@ -9,86 +9,53 @@ import java.util.List;
 
 public class MovementHelper {
 
-    public static List<Square> getLinearMoves(Board chessBoard, Piece piece) {
-        LinkedList<Square> diagOccup = new LinkedList<Square>();
+    public static int[] getLinearMoves(Board chessBoard, Piece piece) {
+        var board = chessBoard.getSquareArray();
+        var position = piece.getPosition();
 
-        Square[][] board = chessBoard.getSquareArray();
-
-        Square position = piece.getPosition();
         int x = position.getXNum();
         int y = position.getYNum();
 
+        int lastYabove = 0;
+        int lastXright = 7;
+        int lastYbelow = 7;
+        int lastXleft = 0;
 
-        int xNW = x - 1;
-        int xSW = x - 1;
-        int xNE = x + 1;
-        int xSE = x + 1;
-        int yNW = y - 1;
-        int ySW = y + 1;
-        int yNE = y - 1;
-        int ySE = y + 1;
-
-        while (xNW >= 0 && yNW >= 0) {
-            if (board[yNW][xNW].isOccupied()) {
-                if (board[yNW][xNW].getOccupyingPiece().getColor() == piece.getColor()) {
-                    break;
-                } else {
-                    diagOccup.add(board[yNW][xNW]);
-                    break;
-                }
-            } else {
-                diagOccup.add(board[yNW][xNW]);
-                yNW--;
-                xNW--;
+        for (int i = 0; i < y; i++) {
+            if (board[i][x].isOccupied()) {
+                if (board[i][x].getOccupyingPiece().getColor() != piece.getColor()) {
+                    lastYabove = i;
+                } else lastYabove = i + 1;
             }
         }
 
-        while (xSW >= 0 && ySW < 8) {
-            if (board[ySW][xSW].isOccupied()) {
-                if (board[ySW][xSW].getOccupyingPiece().getColor() == piece.getColor()) {
-                    break;
-                } else {
-                    diagOccup.add(board[ySW][xSW]);
-                    break;
-                }
-            } else {
-                diagOccup.add(board[ySW][xSW]);
-                ySW++;
-                xSW--;
+        for (int i = 7; i > y; i--) {
+            if (board[i][x].isOccupied()) {
+                if (board[i][x].getOccupyingPiece().getColor() != piece.getColor()) {
+                    lastYbelow = i;
+                } else lastYbelow = i - 1;
             }
         }
 
-        while (xSE < 8 && ySE < 8) {
-            if (board[ySE][xSE].isOccupied()) {
-                if (board[ySE][xSE].getOccupyingPiece().getColor() == piece.getColor()) {
-                    break;
-                } else {
-                    diagOccup.add(board[ySE][xSE]);
-                    break;
-                }
-            } else {
-                diagOccup.add(board[ySE][xSE]);
-                ySE++;
-                xSE++;
+        for (int i = 0; i < x; i++) {
+            if (board[y][i].isOccupied()) {
+                if (board[y][i].getOccupyingPiece().getColor() != piece.getColor()) {
+                    lastXleft = i;
+                } else lastXleft = i + 1;
             }
         }
 
-        while (xNE < 8 && yNE >= 0) {
-            if (board[yNE][xNE].isOccupied()) {
-                if (board[yNE][xNE].getOccupyingPiece().getColor() == piece.getColor()) {
-                    break;
-                } else {
-                    diagOccup.add(board[yNE][xNE]);
-                    break;
-                }
-            } else {
-                diagOccup.add(board[yNE][xNE]);
-                yNE--;
-                xNE++;
+        for (int i = 7; i > x; i--) {
+            if (board[y][i].isOccupied()) {
+                if (board[y][i].getOccupyingPiece().getColor() != piece.getColor()) {
+                    lastXright = i;
+                } else lastXright = i - 1;
             }
         }
 
-        return diagOccup;
+        int[] occups = {lastYabove, lastYbelow, lastXleft, lastXright};
+
+        return occups;
     }
 
     public static List<Square> getDiagonalMoves(Board chessBoard, Piece piece) {

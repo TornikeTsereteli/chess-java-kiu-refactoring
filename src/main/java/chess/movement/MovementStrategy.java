@@ -7,5 +7,5 @@ import chess.model.Square;
 import java.util.List;
 
 public interface MovementStrategy {
-    List<Square> getLegalMoves(Board board, Piece piece);
+    List<Square> getLegalMoves(Board board);
 }
