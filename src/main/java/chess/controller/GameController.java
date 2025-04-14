@@ -42,7 +42,7 @@ public class GameController {
                 allowed.contains(targetSquare) &&
                 board.getCheckmateDetector().testMove(currPiece, targetSquare)) {
 
-            currPiece.move(targetSquare);
+            currPiece.move(targetSquare,board);
             board.getCheckmateDetector().update();
 
             if (board.getCheckmateDetector().blackCheckMated()) {

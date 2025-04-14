@@ -1,4 +1,4 @@
-package chess.movement;
+package chess.common.movement;
 
 import chess.model.Board;
 import chess.model.Piece;
@@ -28,8 +28,8 @@ public class StandardPawnMovement implements MovementStrategy{
         Square[][] board = chessBoard.getSquareArray();
         Square position = pawn.getPosition();
 
-        int x = position.getXNum();
-        int y = position.getYNum();
+        int x = position.getPosition().getX();
+        int y = position.getPosition().getY();
         PieceColor c = pawn.getColor();
 
         if (c == PieceColor.BLACK) {
@@ -86,4 +86,6 @@ public class StandardPawnMovement implements MovementStrategy{
 
         return legalMoves;
     }
+
+
 }

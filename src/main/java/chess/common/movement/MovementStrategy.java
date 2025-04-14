@@ -1,4 +1,4 @@
-package chess.movement;
+package chess.common.movement;
 
 import chess.model.Board;
 import chess.model.Piece;
