@@ -1,6 +1,8 @@
 package chess.model;
 
 import chess.model.enums.PieceColor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.LinkedList;
 
@@ -10,7 +12,10 @@ public class Board {
     private final LinkedList<Piece> Wpieces = new LinkedList<>();
     private final CheckmateDetector cmd;
 
+    @Getter
     private boolean whiteTurn = true;
+    @Setter
+    @Getter
     private Piece currPiece;
 
 
@@ -46,15 +51,15 @@ public class Board {
     private void initializePieces() {
         // Add pawns
         for (int x = 0; x < 8; x++) {
-            board[1][x].put(new Pawn(PieceColor.BLACK, board[1][x], "/bpawn.png"));
-            board[6][x].put(new Pawn(PieceColor.WHITE, board[6][x], "/wpawn.png"));
+            board[1][x].put(new Pawn(PieceColor.BLACK, board[1][x], RESOURCES_BPAWN_PNG));
+            board[6][x].put(new Pawn(PieceColor.WHITE, board[6][x], RESOURCES_WPAWN_PNG));
         }
 
         // Add kings and queens
-        board[0][4].put(new King(PieceColor.BLACK, board[0][4], "/bking.png"));
-        board[7][4].put(new King(PieceColor.WHITE, board[7][4], "/wking.png"));
-        board[0][3].put(new Queen(PieceColor.BLACK, board[0][3], "/bqueen.png"));
-        board[7][3].put(new Queen(PieceColor.WHITE, board[7][3], "/wqueen.png"));
+        board[0][4].put(new King(PieceColor.BLACK, board[0][4], RESOURCES_BKING_PNG));
+        board[7][4].put(new King(PieceColor.WHITE, board[7][4], RESOURCES_WKING_PNG));
+        board[0][3].put(new Queen(PieceColor.BLACK, board[0][3], RESOURCES_BQUEEN_PNG));
+        board[7][3].put(new Queen(PieceColor.WHITE, board[7][3], RESOURCES_WQUEEN_PNG));
 
         // Add other pieces (rooks, knights, bishops)
         board[0][0].put(new Rook(PieceColor.BLACK, board[0][0], RESOURCES_BROOK_PNG));
@@ -85,20 +90,8 @@ public class Board {
         return board;
     }
 
-    public boolean isWhiteTurn() {
-        return whiteTurn;
-    }
-
     public void toggleTurn() {
         whiteTurn = !whiteTurn;
-    }
-
-    public Piece getCurrPiece() {
-        return currPiece;
-    }
-
-    public void setCurrPiece(Piece currPiece) {
-        this.currPiece = currPiece;
     }
 
     public CheckmateDetector getCheckmateDetector() {
@@ -108,23 +101,6 @@ public class Board {
         return whiteTurn;
     }
 
-    public King getWhiteKing() {
-        return (King) board[7][4].getOccupyingPiece();
-    }
-
-    public King getBlackKing() {
-        return (King) board[0][4].getOccupyingPiece();
-    }
-
-    public LinkedList<Piece> getWhitePieces() {
-        return Wpieces;
-    }
-
-    public LinkedList<Piece> getBlackPieces() {
-        return Bpieces;
-    }
-
-    // Move this to the Board class:
     public void capturePiece(Square square, Piece capturingPiece) {
         Piece capturedPiece = square.getOccupyingPiece();
         if (capturedPiece != null) {
@@ -133,4 +109,30 @@ public class Board {
         }
         square.setOccupyingPiece(capturingPiece);
     }
+
+    public boolean isPathClear(Square from, Square to) {
+        int dx = Integer.compare(to.getPosition().getX(), from.getPosition().getX());
+        int dy = Integer.compare(to.getPosition().getY(), from.getPosition().getY());
+
+        int x = from.getPosition().getX() + dx;
+        int y = from.getPosition().getY() + dy;
+
+        while (x != to.getPosition().getX() || y != to.getPosition().getY()) {
+            if (board[x][y] != null) {
+                return false;
+            }
+            x += dx;
+            y += dy;
+        }
+        return true;
+    }
+
+    private King getWhiteKing() {
+        return (King) board[7][4].getOccupyingPiece();
+    }
+
+    private King getBlackKing() {
+        return (King) board[0][4].getOccupyingPiece();
+    }
+
 }

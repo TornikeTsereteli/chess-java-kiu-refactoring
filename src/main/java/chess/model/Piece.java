@@ -17,6 +17,8 @@ public abstract class Piece {
     @Getter
     @Setter
     private Square position;
+
+    @Setter
     private BufferedImage img;
     @Setter
     private MovementStrategy movementStrategy;
@@ -49,7 +51,6 @@ public abstract class Piece {
     public List<Square> getLegalMoves(Board b) {
         return movementStrategy.getLegalMoves(b);
     }
-
 
 
 }
