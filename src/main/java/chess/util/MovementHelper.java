@@ -4,137 +4,142 @@ import chess.model.Board;
 import chess.model.Piece;
 import chess.model.Square;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Utility class for calculating legal moves for chess pieces based on movement patterns.
+ */
 public class MovementHelper {
 
-    public static int[] getLinearMoves(Board chessBoard, Piece piece) {
-        var board = chessBoard.getSquareArray();
-        var position = piece.getPosition();
+    /**
+     * Direction vectors for cardinal directions (up, down, left, right)
+     */
+    private static final int[][] LINEAR_DIRECTIONS = {
+            {-1, 0}, // up
+            {1, 0},  // down
+            {0, -1}, // left
+            {0, 1}   // right
+    };
 
-        int x = position.getXNum();
-        int y = position.getYNum();
+    /**
+     * Direction vectors for diagonal directions
+     */
+    private static final int[][] DIAGONAL_DIRECTIONS = {
+            {-1, -1}, // northwest
+            {1, -1},  // southwest
+            {1, 1},   // southeast
+            {-1, 1}   // northeast
+    };
 
-        int lastYabove = 0;
-        int lastXright = 7;
-        int lastYbelow = 7;
-        int lastXleft = 0;
-
-        for (int i = 0; i < y; i++) {
-            if (board[i][x].isOccupied()) {
-                if (board[i][x].getOccupyingPiece().getColor() != piece.getColor()) {
-                    lastYabove = i;
-                } else lastYabove = i + 1;
-            }
-        }
-
-        for (int i = 7; i > y; i--) {
-            if (board[i][x].isOccupied()) {
-                if (board[i][x].getOccupyingPiece().getColor() != piece.getColor()) {
-                    lastYbelow = i;
-                } else lastYbelow = i - 1;
-            }
-        }
-
-        for (int i = 0; i < x; i++) {
-            if (board[y][i].isOccupied()) {
-                if (board[y][i].getOccupyingPiece().getColor() != piece.getColor()) {
-                    lastXleft = i;
-                } else lastXleft = i + 1;
-            }
-        }
-
-        for (int i = 7; i > x; i--) {
-            if (board[y][i].isOccupied()) {
-                if (board[y][i].getOccupyingPiece().getColor() != piece.getColor()) {
-                    lastXright = i;
-                } else lastXright = i - 1;
-            }
-        }
-
-        int[] occups = {lastYabove, lastYbelow, lastXleft, lastXright};
-
-        return occups;
-    }
-
-    public static List<Square> getDiagonalMoves(Board chessBoard, Piece piece) {
-        LinkedList<Square> diagOccup = new LinkedList<Square>();
-
+    /**
+     * Gets linear moves (horizontal and vertical) for a piece
+     * @param chessBoard The current board state
+     * @param piece The piece to calculate moves for
+     * @return List of squares the piece can move to linearly
+     */
+    public static List<Square> getLinearMoves(Board chessBoard, Piece piece) {
+        List<Square> legalSquares = new ArrayList<>();
         Square[][] board = chessBoard.getSquareArray();
         Square position = piece.getPosition();
-        int x = position.getXNum();
-        int y = position.getYNum();
+        int x = position.getPosition().getX();
+        int y = position.getPosition().getY();
 
-        int xNW = x - 1;
-        int xSW = x - 1;
-        int xNE = x + 1;
-        int xSE = x + 1;
-        int yNW = y - 1;
-        int ySW = y + 1;
-        int yNE = y - 1;
-        int ySE = y + 1;
+        // Check all four directions
+        for (int[] direction : LINEAR_DIRECTIONS) {
+            int dy = direction[0];
+            int dx = direction[1];
 
-        while (xNW >= 0 && yNW >= 0) {
-            if (board[yNW][xNW].isOccupied()) {
-                if (board[yNW][xNW].getOccupyingPiece().getColor() == piece.getColor()) {
-                    break;
-                } else {
-                    diagOccup.add(board[yNW][xNW]);
-                    break;
+            int currentY = y + dy;
+            int currentX = x + dx;
+
+            while (isValidPosition(currentY, currentX)) {
+                Square targetSquare = board[currentY][currentX];
+
+                if (targetSquare.isOccupied()) {
+                    // If enemy piece, add and stop in this direction
+                    if (targetSquare.getOccupyingPiece().getColor() != piece.getColor()) {
+                        legalSquares.add(targetSquare);
+                    }
+                    break; // Stop at any piece (friendly or enemy)
                 }
-            } else {
-                diagOccup.add(board[yNW][xNW]);
-                yNW--;
-                xNW--;
+
+                // Empty square, add it
+                legalSquares.add(targetSquare);
+
+                // Continue in the same direction
+                currentY += dy;
+                currentX += dx;
             }
         }
 
-        while (xSW >= 0 && ySW < 8) {
-            if (board[ySW][xSW].isOccupied()) {
-                if (board[ySW][xSW].getOccupyingPiece().getColor() == piece.getColor()) {
-                    break;
-                } else {
-                    diagOccup.add(board[ySW][xSW]);
-                    break;
+        return legalSquares;
+    }
+
+    /**
+     * Gets diagonal moves for a piece
+     * @param chessBoard The current board state
+     * @param piece The piece to calculate moves for
+     * @return List of squares the piece can move to diagonally
+     */
+    public static List<Square> getDiagonalMoves(Board chessBoard, Piece piece) {
+        List<Square> legalSquares = new ArrayList<>();
+        Square[][] board = chessBoard.getSquareArray();
+        Square position = piece.getPosition();
+        int x = position.getPosition().getX();
+        int y = position.getPosition().getY();
+
+        // Check all four diagonal directions
+        for (int[] direction : DIAGONAL_DIRECTIONS) {
+            int dy = direction[0];
+            int dx = direction[1];
+
+            int currentY = y + dy;
+            int currentX = x + dx;
+
+            while (isValidPosition(currentY, currentX)) {
+                Square targetSquare = board[currentY][currentX];
+
+                if (targetSquare.isOccupied()) {
+                    // If enemy piece, add and stop in this direction
+                    if (targetSquare.getOccupyingPiece().getColor() != piece.getColor()) {
+                        legalSquares.add(targetSquare);
+                    }
+                    break; // Stop at any piece (friendly or enemy)
                 }
-            } else {
-                diagOccup.add(board[ySW][xSW]);
-                ySW++;
-                xSW--;
+
+                // Empty square, add it
+                legalSquares.add(targetSquare);
+
+                // Continue in the same direction
+                currentY += dy;
+                currentX += dx;
             }
         }
 
-        while (xSE < 8 && ySE < 8) {
-            if (board[ySE][xSE].isOccupied()) {
-                if (board[ySE][xSE].getOccupyingPiece().getColor() == piece.getColor()) {
-                    break;
-                } else {
-                    diagOccup.add(board[ySE][xSE]);
-                    break;
-                }
-            } else {
-                diagOccup.add(board[ySE][xSE]);
-                ySE++;
-                xSE++;
-            }
-        }
+        return legalSquares;
+    }
 
-        while (xNE < 8 && yNE >= 0) {
-            if (board[yNE][xNE].isOccupied()) {
-                if (board[yNE][xNE].getOccupyingPiece().getColor() == piece.getColor()) {
-                    break;
-                } else {
-                    diagOccup.add(board[yNE][xNE]);
-                    break;
-                }
-            } else {
-                diagOccup.add(board[yNE][xNE]);
-                yNE--;
-                xNE++;
-            }
-        }
+    /**
+     * Checks if a position is within the chess board bounds
+     * @param y Row coordinate
+     * @param x Column coordinate
+     * @return true if position is valid, false otherwise
+     */
+    private static boolean isValidPosition(int y, int x) {
+        return x >= 0 && x < 8 && y >= 0 && y < 8;
+    }
 
-        return diagOccup;
+    /**
+     * Gets the combined moves (linear and diagonal) for a piece like a queen
+     * @param chessBoard The current board state
+     * @param piece The piece to calculate moves for
+     * @return List of squares the piece can move to
+     */
+    public static List<Square> getCombinedMoves(Board chessBoard, Piece piece) {
+        List<Square> moves = new ArrayList<>();
+        moves.addAll(getLinearMoves(chessBoard, piece));
+        moves.addAll(getDiagonalMoves(chessBoard, piece));
+        return moves;
     }
 }

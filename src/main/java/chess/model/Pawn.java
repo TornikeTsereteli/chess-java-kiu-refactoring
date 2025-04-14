@@ -1,11 +1,10 @@
 package chess.model;
 
+import chess.common.moveExecutor.BasicMoveExecutor;
+import chess.common.moveExecutor.MoveExecutorStrategy;
 import chess.model.enums.PieceColor;
-import chess.movement.MovementStrategy;
-import chess.movement.StandardPawnMovement;
-
-import java.util.List;
-import java.util.LinkedList;
+import chess.common.movement.MovementStrategy;
+import chess.common.movement.StandardPawnMovement;
 
 public class Pawn extends Piece {
 
@@ -15,13 +14,18 @@ public class Pawn extends Piece {
     }
 
     @Override
-    protected MovementStrategy GetMovementStrategy() {
+    protected MovementStrategy getMovementStrategy() {
         return new StandardPawnMovement(this,false);
     }
 
     @Override
-    public boolean move(Square fin) {
+    protected MoveExecutorStrategy getMoveExecutorStrategy() {
+        return new BasicMoveExecutor(this);
+    }
+
+    @Override
+    public boolean move(Square fin,Board board) {
         setMovementStrategy(new StandardPawnMovement(this,true));
-        return super.move(fin);
+        return super.move(fin,board);
     }
 }

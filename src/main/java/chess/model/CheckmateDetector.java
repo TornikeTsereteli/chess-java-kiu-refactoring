@@ -263,22 +263,22 @@ public class CheckmateDetector {
             Square ks = k.getPosition();
             Square[][] brdArray = b.getSquareArray();
             
-            if (ks.getXNum() == ts.getXNum()) {
-                int max = Math.max(ks.getYNum(), ts.getYNum());
-                int min = Math.min(ks.getYNum(), ts.getYNum());
+            if (ks.getPosition().getX() == ts.getPosition().getX()) {
+                int max = Math.max(ks.getPosition().getY(), ts.getPosition().getY());
+                int min = Math.min(ks.getPosition().getY(), ts.getPosition().getY());
                 
                 for (int i = min + 1; i < max; i++) {
                     List<Piece> blks = 
-                            blockMoves.get(brdArray[i][ks.getXNum()]);
+                            blockMoves.get(brdArray[i][ks.getPosition().getX()]);
                     ConcurrentLinkedDeque<Piece> blockers =
                             new ConcurrentLinkedDeque<Piece>();
                     blockers.addAll(blks);
                     
                     if (!blockers.isEmpty()) {
-                        movableSquares.add(brdArray[i][ks.getXNum()]);
+                        movableSquares.add(brdArray[i][ks.getPosition().getX()]);
                         
                         for (Piece p : blockers) {
-                            if (testMove(p,brdArray[i][ks.getXNum()])) {
+                            if (testMove(p,brdArray[i][ks.getPosition().getX()])) {
                                 blockable = true;
                             }
                         }
@@ -287,23 +287,23 @@ public class CheckmateDetector {
                 }
             }
             
-            if (ks.getYNum() == ts.getYNum()) {
-                int max = Math.max(ks.getXNum(), ts.getXNum());
-                int min = Math.min(ks.getXNum(), ts.getXNum());
+            if (ks.getPosition().getY() == ts.getPosition().getY()) {
+                int max = Math.max(ks.getPosition().getX(), ts.getPosition().getX());
+                int min = Math.min(ks.getPosition().getX(), ts.getPosition().getX());
                 
                 for (int i = min + 1; i < max; i++) {
                     List<Piece> blks = 
-                            blockMoves.get(brdArray[ks.getYNum()][i]);
+                            blockMoves.get(brdArray[ks.getPosition().getY()][i]);
                     ConcurrentLinkedDeque<Piece> blockers = 
                             new ConcurrentLinkedDeque<Piece>();
                     blockers.addAll(blks);
                     
                     if (!blockers.isEmpty()) {
                         
-                        movableSquares.add(brdArray[ks.getYNum()][i]);
+                        movableSquares.add(brdArray[ks.getPosition().getY()][i]);
                         
                         for (Piece p : blockers) {
-                            if (testMove(p, brdArray[ks.getYNum()][i])) {
+                            if (testMove(p, brdArray[ks.getPosition().getY()][i])) {
                                 blockable = true;
                             }
                         }
@@ -315,10 +315,10 @@ public class CheckmateDetector {
             Class<? extends Piece> tC = threats.get(0).getClass();
             
             if (tC.equals(Queen.class) || tC.equals(Bishop.class)) {
-                int kX = ks.getXNum();
-                int kY = ks.getYNum();
-                int tX = ts.getXNum();
-                int tY = ts.getYNum();
+                int kX = ks.getPosition().getX();
+                int kY = ks.getPosition().getY();
+                int tX = ts.getPosition().getX();
+                int tY = ts.getPosition().getY();
                 
                 if (kX > tX && kY > tY) {
                     for (int i = tX + 1; i < kX; i++) {
@@ -440,13 +440,13 @@ public class CheckmateDetector {
         boolean movetest = true;
         Square init = p.getPosition();
         
-        p.move(sq);
+        p.move(sq,b);
         update();
         
         if (p.getColor() == PieceColor.BLACK && blackInCheck()) movetest = false;
         else if (p.getColor() == PieceColor.WHITE && whiteInCheck()) movetest = false;
         
-        p.move(init);
+        p.move(init,b);
         if (c != null) sq.put(c);
         
         update();

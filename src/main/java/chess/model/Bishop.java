@@ -1,10 +1,10 @@
 package chess.model;
 
+import chess.common.moveExecutor.BasicMoveExecutor;
+import chess.common.moveExecutor.MoveExecutorStrategy;
 import chess.model.enums.PieceColor;
-import chess.movement.MovementStrategy;
-import chess.movement.StandardBishopMovement;
-
-import java.util.List;
+import chess.common.movement.MovementStrategy;
+import chess.common.movement.StandardBishopMovement;
 
 public class Bishop extends Piece {
 
@@ -13,8 +13,13 @@ public class Bishop extends Piece {
     }
 
     @Override
-    protected MovementStrategy GetMovementStrategy() {
+    protected MovementStrategy getMovementStrategy() {
         return new StandardBishopMovement(this);
+    }
+
+    @Override
+    protected MoveExecutorStrategy getMoveExecutorStrategy() {
+        return new BasicMoveExecutor(this);
     }
 
 }

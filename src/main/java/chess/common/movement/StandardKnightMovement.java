@@ -1,4 +1,4 @@
-package chess.movement;
+package chess.common.movement;
 
 import chess.model.Board;
 import chess.model.Piece;
@@ -22,8 +22,8 @@ public class StandardKnightMovement implements MovementStrategy{
         Square position = knight.getPosition();
 
 
-        int x = position.getXNum();
-        int y = position.getYNum();
+        int x = position.getPosition().getX();
+        int y = position.getPosition().getY();
 
         for (int i = 2; i > -3; i--) {
             for (int k = 2; k > -3; k--) {
@@ -42,4 +42,6 @@ public class StandardKnightMovement implements MovementStrategy{
         return legalMoves;
 
     }
+
+
 }

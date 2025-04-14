@@ -1,4 +1,4 @@
-package chess.movement;
+package chess.common.movement;
 
 import chess.model.Board;
 import chess.model.Piece;
@@ -19,4 +19,6 @@ public class StandardBishopMovement implements MovementStrategy{
     public List<Square> getLegalMoves(Board chessBoard) {
         return MovementHelper.getDiagonalMoves(chessBoard, bishop);
     }
+
+
 }

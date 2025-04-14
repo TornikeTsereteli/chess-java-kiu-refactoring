@@ -1,11 +1,10 @@
 package chess.model;
 
+import chess.common.moveExecutor.BasicMoveExecutor;
+import chess.common.moveExecutor.MoveExecutorStrategy;
 import chess.model.enums.PieceColor;
-import chess.movement.MovementStrategy;
-import chess.movement.StandardQueenMovement;
-
-import java.util.LinkedList;
-import java.util.List;
+import chess.common.movement.MovementStrategy;
+import chess.common.movement.StandardQueenMovement;
 
 public class Queen extends Piece {
 
@@ -14,8 +13,14 @@ public class Queen extends Piece {
     }
 
     @Override
-    protected MovementStrategy GetMovementStrategy() {
+    protected MovementStrategy getMovementStrategy() {
         return new StandardQueenMovement(this);
     }
+
+    @Override
+    protected MoveExecutorStrategy getMoveExecutorStrategy() {
+        return new BasicMoveExecutor(this);
+    }
+
 
 }

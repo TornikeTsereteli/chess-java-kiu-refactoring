@@ -14,7 +14,7 @@ public class Board {
     private Piece currPiece;
 
 
-        private static final String RESOURCES_WBISHOP_PNG = "/wbishop.png";
+    private static final String RESOURCES_WBISHOP_PNG = "/wbishop.png";
     private static final String RESOURCES_BBISHOP_PNG = "/bbishop.png";
     private static final String RESOURCES_WKNIGHT_PNG = "/wknight.png";
     private static final String RESOURCES_BKNIGHT_PNG = "/bknight.png";
@@ -38,7 +38,7 @@ public class Board {
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
                 PieceColor color = ((x + y) % 2 == 0) ? PieceColor.WHITE : PieceColor.BLACK;
-                board[y][x] = new Square(this, color, x, y);
+                board[y][x] = new Square(color, x, y);
             }
         }
     }
@@ -122,5 +122,15 @@ public class Board {
 
     public LinkedList<Piece> getBlackPieces() {
         return Bpieces;
+    }
+
+    // Move this to the Board class:
+    public void capturePiece(Square square, Piece capturingPiece) {
+        Piece capturedPiece = square.getOccupyingPiece();
+        if (capturedPiece != null) {
+            if (capturedPiece.getColor() == PieceColor.BLACK) Bpieces.remove(capturedPiece);
+            else Wpieces.remove(capturedPiece);
+        }
+        square.setOccupyingPiece(capturingPiece);
     }
 }
