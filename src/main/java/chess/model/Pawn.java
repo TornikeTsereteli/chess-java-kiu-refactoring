@@ -13,6 +13,7 @@ public class Pawn extends Piece {
         super(color, initSq, img_file);
     }
 
+
     @Override
     protected MovementStrategy getMovementStrategy() {
         return new StandardPawnMovement(this,false);
@@ -23,18 +24,12 @@ public class Pawn extends Piece {
         return new BasicMoveExecutor(this);
     }
 
-//    @Override
-//    public boolean attacksSquare(Square target, Board board) {
-//        int dx = target.getPosition().getX() - this.getPosition().getPosition().getX();
-//        int dy = target.getPosition().getY() - this.getPosition().getPosition().getY();
-//
-//        int direction = (this.getColor() == PieceColor.WHITE) ? 1 : -1;
-//        return Math.abs(dx) == 1 && dy == direction;
-//    }
 
     @Override
     public boolean move(Square fin,Board board) {
         setMovementStrategy(new StandardPawnMovement(this,true));
         return super.move(fin,board);
     }
+
+
 }

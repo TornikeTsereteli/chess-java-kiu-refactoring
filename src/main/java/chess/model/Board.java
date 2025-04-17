@@ -5,11 +5,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class Board {
     private final Square[][] board;
-    private final LinkedList<Piece> Bpieces = new LinkedList<>();
-    private final LinkedList<Piece> Wpieces = new LinkedList<>();
+
+    @Getter
+    private final LinkedList<Piece> whitePieces = new LinkedList<>();
+
+    @Getter
+    private final LinkedList<Piece> blackPieces = new LinkedList<>();
     private final CheckmateDetector cmd;
 
     @Getter
@@ -36,17 +41,59 @@ public class Board {
         board = new Square[8][8];
         initializeBoardSquares();
         initializePieces();
-        cmd = new CheckmateDetector(this, Wpieces, Bpieces, getWhiteKing(), getBlackKing());
+        cmd = new CheckmateDetector(this, whitePieces, blackPieces, getWhiteKing(), getBlackKing());
     }
 
-    private void initializeBoardSquares() {
-        for (int x = 0; x < 8; x++) {
-            for (int y = 0; y < 8; y++) {
-                PieceColor color = ((x + y) % 2 == 0) ? PieceColor.WHITE : PieceColor.BLACK;
-                board[y][x] = new Square(color, x, y);
-            }
-        }
+
+
+
+
+
+
+    public Square[][] getSquareArray() {
+        return board;
     }
+
+    public void toggleTurn() {
+        whiteTurn = !whiteTurn;
+    }
+
+    public CheckmateDetector getCheckmateDetector() {
+        return cmd;
+    }
+    public boolean getTurn() {
+        return whiteTurn;
+    }
+
+    public void capturePiece(Square square, Piece capturingPiece) {
+        Piece capturedPiece = square.getOccupyingPiece();
+        if (capturedPiece != null) {
+            if (capturedPiece.getColor() == PieceColor.BLACK) blackPieces.remove(capturedPiece);
+            else whitePieces.remove(capturedPiece);
+        }
+        square.setOccupyingPiece(capturingPiece);
+    }
+
+
+    public King getWhiteKing() {
+        return (King) whitePieces.stream().filter(x -> x instanceof King).findFirst().get();
+    }
+
+    public King getBlackKing() {
+        return (King) blackPieces.stream().filter(x -> x instanceof King).findFirst().get();
+    }
+
+
+
+
+    public boolean isSquareUnderThreat(Square position, PieceColor color){
+        return switch (color) {
+            case WHITE -> blackPieces.stream().anyMatch(piece -> piece.getLegalMoves(this).contains(position));
+            case BLACK -> whitePieces.stream().anyMatch(piece -> piece.getLegalMoves(this).contains(position));
+        };
+    }
+
+
 
     private void initializePieces() {
         // Add pawns
@@ -80,59 +127,19 @@ public class Board {
         // Add to Bpieces and Wpieces
         for (int y = 0; y < 2; y++) {
             for (int x = 0; x < 8; x++) {
-                Bpieces.add(board[y][x].getOccupyingPiece());
-                Wpieces.add(board[7 - y][x].getOccupyingPiece());
+                blackPieces.add(board[y][x].getOccupyingPiece());
+                whitePieces.add(board[7 - y][x].getOccupyingPiece());
             }
         }
     }
 
-    public Square[][] getSquareArray() {
-        return board;
-    }
-
-    public void toggleTurn() {
-        whiteTurn = !whiteTurn;
-    }
-
-    public CheckmateDetector getCheckmateDetector() {
-        return cmd;
-    }
-        public boolean getTurn() {
-        return whiteTurn;
-    }
-
-    public void capturePiece(Square square, Piece capturingPiece) {
-        Piece capturedPiece = square.getOccupyingPiece();
-        if (capturedPiece != null) {
-            if (capturedPiece.getColor() == PieceColor.BLACK) Bpieces.remove(capturedPiece);
-            else Wpieces.remove(capturedPiece);
-        }
-        square.setOccupyingPiece(capturingPiece);
-    }
-
-    public boolean isPathClear(Square from, Square to) {
-        int dx = Integer.compare(to.getPosition().getX(), from.getPosition().getX());
-        int dy = Integer.compare(to.getPosition().getY(), from.getPosition().getY());
-
-        int x = from.getPosition().getX() + dx;
-        int y = from.getPosition().getY() + dy;
-
-        while (x != to.getPosition().getX() || y != to.getPosition().getY()) {
-            if (board[x][y] != null) {
-                return false;
+    private void initializeBoardSquares() {
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                PieceColor color = ((x + y) % 2 == 0) ? PieceColor.WHITE : PieceColor.BLACK;
+                board[y][x] = new Square(color, x, y);
             }
-            x += dx;
-            y += dy;
         }
-        return true;
-    }
-
-    private King getWhiteKing() {
-        return (King) board[7][4].getOccupyingPiece();
-    }
-
-    private King getBlackKing() {
-        return (King) board[0][4].getOccupyingPiece();
     }
 
 }

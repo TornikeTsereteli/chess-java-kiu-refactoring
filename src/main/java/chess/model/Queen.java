@@ -12,6 +12,7 @@ public class Queen extends Piece {
         super(color, initSq, img_file);
     }
 
+
     @Override
     protected MovementStrategy getMovementStrategy() {
         return new StandardQueenMovement(this);
@@ -21,6 +22,7 @@ public class Queen extends Piece {
     protected MoveExecutorStrategy getMoveExecutorStrategy() {
         return new BasicMoveExecutor(this);
     }
+
 
 
 }

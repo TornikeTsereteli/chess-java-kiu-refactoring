@@ -12,6 +12,8 @@ public class Bishop extends Piece {
         super(color, initSq, img_file);
     }
 
+
+
     @Override
     protected MovementStrategy getMovementStrategy() {
         return new StandardBishopMovement(this);
@@ -22,13 +24,5 @@ public class Bishop extends Piece {
         return new BasicMoveExecutor(this);
     }
 
-//    @Override
-//    public boolean attacksSquare(Square target, Board board) {
-//        int dx = Math.abs(this.getPosition().getPosition().getX() - target.getPosition().getX());
-//        int dy = Math.abs(this.getPosition().getPosition().getY() - target.getPosition().getY());
-//
-//        if (dx != dy) return false;
-//        return board.isPathClear(this.getPosition(), target);
-//    }
 
 }

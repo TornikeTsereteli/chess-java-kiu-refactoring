@@ -6,10 +6,12 @@ import chess.common.movement.MovementStrategy;
 import chess.util.PieceImageLoader;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.List;
+
 
 public abstract class Piece {
     @Getter
@@ -34,6 +36,7 @@ public abstract class Piece {
         this.movementStrategy = getMovementStrategy();
         this.moveExecutorStrategy = getMoveExecutorStrategy();
     }
+
 
     public boolean move(Square destination, Board board) {
       return moveExecutorStrategy.executeMove(board, destination );

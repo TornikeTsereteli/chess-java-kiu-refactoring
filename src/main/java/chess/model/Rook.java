@@ -12,6 +12,7 @@ public class Rook extends Piece {
         super(color, initSq, img_file);
     }
 
+
     @Override
     protected MovementStrategy getMovementStrategy() {
         return new StandardRookMovement(this);
@@ -21,6 +22,7 @@ public class Rook extends Piece {
     protected MoveExecutorStrategy getMoveExecutorStrategy() {
         return new BasicMoveExecutor(this);
     }
+
 
 
 }

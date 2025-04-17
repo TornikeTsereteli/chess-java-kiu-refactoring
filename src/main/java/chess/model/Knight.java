@@ -12,6 +12,7 @@ public class Knight extends Piece {
         super(color, initSq, img_file);
     }
 
+
     @Override
     protected MovementStrategy getMovementStrategy() {
         return new StandardKnightMovement(this);
@@ -22,12 +23,6 @@ public class Knight extends Piece {
         return new BasicMoveExecutor(this);
     }
 
-//    @Override
-//    public boolean attacksSquare(Square target, Board board) {
-//        int dx = Math.abs(this.getPosition().getPosition().getX() - target.getPosition().getX());
-//        int dy = Math.abs(this.getPosition().getPosition().getY() - target.getPosition().getY());
-//        return (dx == 2 && dy == 1) || (dx == 1 && dy == 2);
-//    }
 
 
 }

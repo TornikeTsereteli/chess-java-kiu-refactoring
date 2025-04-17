@@ -10,4 +10,5 @@ public interface CheckmateDetector {
 
     // potentially new feature, do not have enough time for it :(((
     boolean isStalemate(PieceColor color);
+
 }

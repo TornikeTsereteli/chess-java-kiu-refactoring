@@ -12,6 +12,8 @@ public class King extends Piece {
         super(color, initSq, img_file);
     }
 
+
+
     @Override
     protected MovementStrategy getMovementStrategy() {
         return new StandardKingMovement(this);

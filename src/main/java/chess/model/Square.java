@@ -3,6 +3,8 @@ package chess.model;
 import chess.model.enums.PieceColor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+
 
 public class Square {
     @Getter
@@ -20,6 +22,12 @@ public class Square {
     public Square(PieceColor color, int x, int y) {
         this.color = color;
         this.position = new Position(x, y);
+    }
+
+    public Square(Square other){
+        this.color = other.color;
+        this.position = other.position;
+        this.display = other.display;
     }
 
     public boolean isOccupied() {
