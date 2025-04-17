@@ -39,7 +39,6 @@ public class GameController {
         if (currPiece == null) return;
 
         List<Square> legalMoves = currPiece.getLegalMoves(board);
-        List<Square> allowed = board.getCheckmateDetector().getAllowableSquares(board.isWhiteTurn());
 
         CheckmateDetector chd = new StandardCheckmateDetector(board);
 

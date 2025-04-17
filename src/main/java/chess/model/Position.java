@@ -12,6 +12,7 @@ public class Position {
     }
 
     public String toAlgebraic() {
-        return "" + (char) ('a' + x) + (char) ('1' + y);
+        return "" + (char) ('a' + x) + (8 - y);  // Convert y correctly as 1-based index
     }
+
 }

@@ -23,6 +23,7 @@ public class StandardCheckmateDetector implements CheckmateDetector{
     public StandardCheckmateDetector(Board board) {
         this.board = board;
 
+
     }
 
     @Override
@@ -56,7 +57,19 @@ public class StandardCheckmateDetector implements CheckmateDetector{
 
     @Override
     public boolean isStalemate(PieceColor color) {
-        return false;
+        List<Move> moves = getAllPossibleMoves(color);
+
+        boolean v = moves.stream().allMatch( move -> {
+            move.getMovedPiece().move(move.getTo(),board);
+            boolean b = isInCheck(color);
+            System.out.println(move);
+            System.out.println(b);
+
+            move.undo(board);
+            return b;
+        });
+        var k = isInCheck(color);
+        return v && !isInCheck(color);
     }
 
 

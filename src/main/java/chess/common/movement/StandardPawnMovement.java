@@ -23,63 +23,32 @@ public class StandardPawnMovement implements MovementStrategy{
 
     @Override
     public List<Square> getLegalMoves(Board chessBoard) {
-        LinkedList<Square> legalMoves = new LinkedList<Square>();
-
+        List<Square> legalMoves = new LinkedList<>();
         Square[][] board = chessBoard.getSquareArray();
         Square position = pawn.getPosition();
-
         int x = position.getPosition().getX();
         int y = position.getPosition().getY();
-        PieceColor c = pawn.getColor();
+        PieceColor color = pawn.getColor();
 
-        if (c == PieceColor.BLACK) {
-            if (!wasMoved) {
-                if (!board[y+2][x].isOccupied()) {
-                    legalMoves.add(board[y+2][x]);
-                }
-            }
+        int dir = (color == PieceColor.WHITE) ? -1 : 1;
 
-            if (y+1 < 8) {
-                if (!board[y+1][x].isOccupied()) {
-                    legalMoves.add(board[y+1][x]);
-                }
-            }
+        if (y + dir >= 0 && y + dir < 8 && !board[y + dir][x].isOccupied()) {
+            legalMoves.add(board[y + dir][x]);
 
-            if (x+1 < 8 && y+1 < 8) {
-                if (board[y+1][x+1].isOccupied()) {
-                    legalMoves.add(board[y+1][x+1]);
-                }
-            }
-
-            if (x-1 >= 0 && y+1 < 8) {
-                if (board[y+1][x-1].isOccupied()) {
-                    legalMoves.add(board[y+1][x-1]);
-                }
+            if (!wasMoved && y + 2 * dir >= 0 && y + 2 * dir < 8 && !board[y + 2 * dir][x].isOccupied()) {
+                legalMoves.add(board[y + 2 * dir][x]);
             }
         }
 
-        if (c == PieceColor.WHITE) {
-            if (!wasMoved) {
-                if (!board[y-2][x].isOccupied()) {
-                    legalMoves.add(board[y-2][x]);
-                }
-            }
+        // Diagonal captures
+        for (int dx : new int[]{-1, 1}) {
+            int nx = x + dx;
+            int ny = y + dir;
 
-            if (y-1 >= 0) {
-                if (!board[y-1][x].isOccupied()) {
-                    legalMoves.add(board[y-1][x]);
-                }
-            }
-
-            if (x+1 < 8 && y-1 >= 0) {
-                if (board[y-1][x+1].isOccupied()) {
-                    legalMoves.add(board[y-1][x+1]);
-                }
-            }
-
-            if (x-1 >= 0 && y-1 >= 0) {
-                if (board[y-1][x-1].isOccupied()) {
-                    legalMoves.add(board[y-1][x-1]);
+            if (nx >= 0 && nx < 8 && ny >= 0 && ny < 8) {
+                Square diag = board[ny][nx];
+                if (diag.isOccupied() && diag.getOccupyingPiece().getColor() != color) {
+                    legalMoves.add(diag);
                 }
             }
         }

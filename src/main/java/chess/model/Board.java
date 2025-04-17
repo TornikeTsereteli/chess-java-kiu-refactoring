@@ -15,7 +15,7 @@ public class Board {
 
     @Getter
     private final LinkedList<Piece> blackPieces = new LinkedList<>();
-    private final CheckmateDetector cmd;
+
 
     @Getter
     private boolean whiteTurn = true;
@@ -41,7 +41,6 @@ public class Board {
         board = new Square[8][8];
         initializeBoardSquares();
         initializePieces();
-        cmd = new CheckmateDetector(this, whitePieces, blackPieces, getWhiteKing(), getBlackKing());
     }
 
 
@@ -58,9 +57,6 @@ public class Board {
         whiteTurn = !whiteTurn;
     }
 
-    public CheckmateDetector getCheckmateDetector() {
-        return cmd;
-    }
     public boolean getTurn() {
         return whiteTurn;
     }
@@ -87,11 +83,38 @@ public class Board {
 
 
     public boolean isSquareUnderThreat(Square position, PieceColor color){
+
+        List<String> bb = blackPieces.stream().flatMap(x->x.getLegalMoves(this).stream().map(y->y.getPosition().toAlgebraic())).toList();
+        List<String> ww = whitePieces.stream().flatMap(x->x.getLegalMoves(this).stream().map(y->y.getPosition().toAlgebraic())).toList();
+
+
+
         return switch (color) {
             case WHITE -> blackPieces.stream().anyMatch(piece -> piece.getLegalMoves(this).contains(position));
             case BLACK -> whitePieces.stream().anyMatch(piece -> piece.getLegalMoves(this).contains(position));
         };
     }
+
+
+    public Square getSquare(String notation) {
+        if (notation.length() != 2) {
+            throw new IllegalArgumentException("Invalid square notation: " + notation);
+        }
+
+        char file = notation.charAt(0); // 'a' to 'h'
+        char rank = notation.charAt(1); // '1' to '8'
+
+        int x = file - 'a';          // e.g. 'e' - 'a' = 4
+        int y = 8 - Character.getNumericValue(rank); // e.g. '2' = 6
+
+        if (x < 0 || x >= 8 || y < 0 || y >= 8) {
+            throw new IllegalArgumentException("Invalid square position: " + notation);
+        }
+
+        return board[y][x];
+    }
+
+
 
 
 

@@ -32,6 +32,7 @@ public abstract class Piece {
         this.color = color;
         this.position = initSq;
 
+
         this.img = PieceImageLoader.loadImage(img_file);
         this.movementStrategy = getMovementStrategy();
         this.moveExecutorStrategy = getMoveExecutorStrategy();
