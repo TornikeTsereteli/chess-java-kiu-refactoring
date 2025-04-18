@@ -28,6 +28,10 @@ public abstract class Piece {
     @Setter
     private MoveExecutorStrategy moveExecutorStrategy;
 
+    @Getter
+    @Setter
+    private boolean hasMoved;
+
     public Piece(PieceColor color, Square initSq, String img_file) {
         this.color = color;
         this.position = initSq;

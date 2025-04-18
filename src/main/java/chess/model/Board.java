@@ -83,12 +83,6 @@ public class Board {
 
 
     public boolean isSquareUnderThreat(Square position, PieceColor color){
-
-        List<String> bb = blackPieces.stream().flatMap(x->x.getLegalMoves(this).stream().map(y->y.getPosition().toAlgebraic())).toList();
-        List<String> ww = whitePieces.stream().flatMap(x->x.getLegalMoves(this).stream().map(y->y.getPosition().toAlgebraic())).toList();
-
-
-
         return switch (color) {
             case WHITE -> blackPieces.stream().anyMatch(piece -> piece.getLegalMoves(this).contains(position));
             case BLACK -> whitePieces.stream().anyMatch(piece -> piece.getLegalMoves(this).contains(position));

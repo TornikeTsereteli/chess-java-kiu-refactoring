@@ -2,6 +2,7 @@ package pieceMovement;
 
 import chess.model.Board;
 import chess.model.King;
+import chess.model.Rook;
 import chess.model.enums.PieceColor;
 import chess.model.Square;
 import org.junit.jupiter.api.BeforeEach;
@@ -166,4 +167,82 @@ public class KingMovementTests {
 
         assertEquals(4, moves.size());
     }
+
+
+    @Test
+    void testWhiteKingsideCastle() {
+        Square kingSquare = board.getSquare("e1");
+        Square rookSquare = board.getSquare("h1");
+        King king = new King(PieceColor.WHITE, kingSquare, "/wking.png");
+        Rook rook = new Rook(PieceColor.WHITE, rookSquare, "/wrook.png");
+
+        kingSquare.setOccupyingPiece(king);
+        rookSquare.setOccupyingPiece(rook);
+        board.getWhitePieces().add(king);
+        board.getWhitePieces().add(rook);
+
+        List<Square> moves = king.getLegalMoves(board);
+        assertTrue(moves.contains(board.getSquare("g1")), "White kingside castling to g1 should be allowed");
+    }
+
+    @Test
+    void testWhiteQueensideCastle() {
+        Square kingSquare = board.getSquare("e1");
+        Square rookSquare = board.getSquare("a1");
+        King king = new King(PieceColor.WHITE, kingSquare, "/wking.png");
+        Rook rook = new Rook(PieceColor.WHITE, rookSquare, "/wrook.png");
+
+        kingSquare.setOccupyingPiece(king);
+        rookSquare.setOccupyingPiece(rook);
+        board.getWhitePieces().add(king);
+        board.getWhitePieces().add(rook);
+
+        List<Square> moves = king.getLegalMoves(board);
+        assertTrue(moves.contains(board.getSquare("c1")), "White queenside castling to c1 should be allowed");
+    }
+
+    @Test
+    void testCannotCastleIfPathBlocked() {
+        Square kingSquare = board.getSquare("e1");
+        Square rookSquare = board.getSquare("h1");
+        Square blocking = board.getSquare("f1");
+
+        King king = new King(PieceColor.WHITE, kingSquare, "/wking.png");
+        Rook rook = new Rook(PieceColor.WHITE, rookSquare, "/wrook.png");
+        Rook blocker = new Rook(PieceColor.WHITE, blocking, "/wrook.png");
+
+        kingSquare.setOccupyingPiece(king);
+        rookSquare.setOccupyingPiece(rook);
+        blocking.setOccupyingPiece(blocker);
+        board.getWhitePieces().add(king);
+        board.getWhitePieces().add(rook);
+        board.getWhitePieces().add(blocker);
+
+        List<Square> moves = king.getLegalMoves(board);
+        assertFalse(moves.contains(board.getSquare("g1")), "Kingside castling should not be allowed if path is blocked");
+    }
+
+    @Test
+    void testCannotCastleIfInCheck() {
+        Square kingSquare = board.getSquare("e1");
+        Square rookSquare = board.getSquare("h1");
+        Square enemy = board.getSquare("e8");
+
+        King king = new King(PieceColor.WHITE, kingSquare, "/wking.png");
+        Rook rook = new Rook(PieceColor.WHITE, rookSquare, "/wrook.png");
+        Rook blackRook = new Rook(PieceColor.BLACK, enemy, "/brook.png");
+
+        kingSquare.setOccupyingPiece(king);
+        rookSquare.setOccupyingPiece(rook);
+        enemy.setOccupyingPiece(blackRook);
+        board.getWhitePieces().add(king);
+        board.getWhitePieces().add(rook);
+        board.getBlackPieces().add(blackRook);
+
+        List<Square> moves = king.getLegalMoves(board);
+        assertFalse(moves.contains(board.getSquare("g1")), "Castling not allowed while in check");
+    }
+
+
+
 }

@@ -15,7 +15,6 @@ public class PieceRendering {
     }
 
     public void draw(Graphics g, int width, int height) {
-        // Draw the image scaled to the full square size
         g.drawImage(img, 0, 0, width, height, null);
     }
 }

@@ -2,6 +2,7 @@ package chess.model;
 
 import chess.common.moveExecutor.BasicMoveExecutor;
 import chess.common.moveExecutor.MoveExecutorStrategy;
+import chess.common.moveExecutor.WithCastleMoveExecutor;
 import chess.model.enums.PieceColor;
 import chess.common.movement.MovementStrategy;
 import chess.common.movement.StandardKingMovement;
@@ -21,7 +22,7 @@ public class King extends Piece {
 
     @Override
     protected MoveExecutorStrategy getMoveExecutorStrategy() {
-        return new BasicMoveExecutor(this);
+        return new WithCastleMoveExecutor(this);
     }
 
 
